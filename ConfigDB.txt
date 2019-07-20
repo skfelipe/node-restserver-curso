@@ -1,7 +1,7 @@
 
 
-user: skandmin
-pass: IHuDKfjnHLQJNqj9
+user: MONGO_USSER
+pass: MONGO_PASS
 
 MongoDb URL
-mongodb+srv://skandmin:IHuDKfjnHLQJNqj9@cluster0-ym7m7.mongodb.net/cafe
+MONGO_URI
