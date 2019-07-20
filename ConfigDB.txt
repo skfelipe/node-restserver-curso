@@ -1,7 +1,7 @@
 
 
-user: MONGO_USSER
-pass: MONGO_PASS
+user: process.env.MONGO_USSER
+pass: process.env.MONGO_PASS
 
 MongoDb URL
-MONGO_URI
+process.env.MONGO_URI
