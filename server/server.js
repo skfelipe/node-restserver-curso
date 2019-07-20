@@ -1,7 +1,8 @@
 require('./config/config');
 const express = require("express");
+const mongoose = require("mongoose"); // server base mongo npm install mongoose --save
 const app = express();
-const BodyParser = require("body-parser");
+const BodyParser = require("body-parser"); // paseador de body npm install body-parser
 
 
 // parse application/x-www-form-urlencoded
@@ -9,38 +10,19 @@ app.use(BodyParser.urlencoded({ extended: false }));
  
 // parse application/json
 app.use(BodyParser.json());
+app.use(require('./routes/usuario'));
 
 
 
-
-app.get('/usuario', (req, res)=>{
-    res.json("Get Usuario");
-});
-app.post('/usuario', (req, res)=>{
-
-    let body = req.body;
-    if(body.nombre === undefined){
-        res.status(400).json({
-            ok: false,
-            mensaje: 'El nombres es necesario'
-        });
+mongoose.connect(process.env.URLDB,
+    { useNewUrlParser: true, useCreateIndex: true},(err, res) =>{
+    if(err){
+        throw err;
     }else{
-        res.json({
-            persona: body
-        });
+        console.log('Base de datos ONLINE');
     }
+});
 
-    
-});
-app.put('/usuario/:id', (req, res)=>{
-    let id = req.params.id;
-    res.json({
-        id
-    });
-});
-app.delete('/usuario', (req, res)=>{
-    res.json("Delete Usuario");
-});
 app.listen(process.env.PORT,()=>{
     console.log('Aplicacion ejecutandose en el puerto', process.env.PORT);
 });
