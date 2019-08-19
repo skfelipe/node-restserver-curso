@@ -2,17 +2,25 @@ const express = require("express"); // express npm install express --save
 const bcrypt = require('bcrypt'); // encriptador npm install bcrypt --save
 const _ = require('underscore'); //filtra el ingreso de datos por json
 const Usuario = require('../models/usuario');
+const { verificaToken, verificaAdmin_Role } = require('../middlewares/autenticacion');
 const app = express();
 
-app.get('/usuario', (req, res) => {
+app.get('/usuario', verificaToken, (req, res) => {
+
+    // OBTENIENE LOS DATOS DEL USUARIO QUE ESTAN EN EL TOKEN 
+    // return res.json({
+    //     usuario: req.usuario,
+    //     nombre: req.usuario.nombre,
+    //     email: req.usuario.email
+    // });
 
     let desde = req.query.desde || 0;
     desde = Number(desde);
 
     let limite = req.query.limite || 5;
     limite = Number(limite);
-    
-    Usuario.find({estado: true},'nombre email role estado google img') // el string es el elemento para realizar filtros en la salida de datos
+
+    Usuario.find({ estado: true }, 'nombre email role estado google img') // el string es el elemento para realizar filtros en la salida de datos
         .skip(desde)
         .limit(limite)
         .exec((err, usuarios) => {
@@ -23,18 +31,18 @@ app.get('/usuario', (req, res) => {
                 });
             }
 
-            Usuario.countDocuments({estado: true}, (err, conteo)=>{
+            Usuario.countDocuments({ estado: true }, (err, conteo) => {
                 res.json({
                     ok: true,
                     usuarios,
                     cuantos: conteo
                 });
-            });         
-            
-        })
+            });
+
+        });
 });
 
-app.post('/usuario', (req, res) => {
+app.post('/usuario', [verificaToken, verificaAdmin_Role], (req, res) => {
 
     let body = req.body;
 
@@ -63,7 +71,7 @@ app.post('/usuario', (req, res) => {
 
 });
 
-app.put('/usuario/:id', (req, res) => {
+app.put('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
     let body = _.pick(req.body, ['nombre', 'email', 'img', 'role', 'estado']);
 
@@ -77,7 +85,7 @@ app.put('/usuario/:id', (req, res) => {
 
         res.json({
             ok: true,
-            usaurio: usuarioDB
+            usuario: usuarioDB
         });
 
     });
@@ -86,7 +94,7 @@ app.put('/usuario/:id', (req, res) => {
 
 
 });
-app.delete('/usuario/:id', (req, res) => {
+app.delete('/usuario/:id', [verificaToken, verificaAdmin_Role], (req, res) => {
     let id = req.params.id;
 
     // Usuario.findByIdAndRemove(id, (err, usuarioEliminado)=>{
@@ -116,7 +124,7 @@ app.delete('/usuario/:id', (req, res) => {
     let cambiaEstado = {
         estado: false
     }
-    Usuario.findByIdAndUpdate(id, cambiaEstado, { new: true}, (err, usuarioupdate)=>{
+    Usuario.findByIdAndUpdate(id, cambiaEstado, { new: true }, (err, usuarioupdate) => {
         if (err) {
             return res.status(400).json({
                 ok: false,
