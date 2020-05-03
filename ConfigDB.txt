@@ -5,3 +5,22 @@ pass: process.env.MONGO_PASS
 
 MongoDb URL
 process.env.MONGO_URI
+
+
+ID de cliente
+    930373108948-rpah8h7nsen73u8hkf81kdma1msf2381.apps.googleusercontent.com
+Secreto de cliente
+    RhJwj7xh2PiByHW0cPRXTIcK
+
+//iniciar base de datos
+
+cd C:\mongodb\bin\mongod.exe --> en server_win_7_Node.js
+
+
+//iniciar node
+
+C:\Users\server_node\Desktop\node\07-restserver
+
+nodemon server/server
+
+

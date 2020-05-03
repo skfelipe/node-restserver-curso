@@ -3,6 +3,7 @@ const express = require("express");
 const mongoose = require("mongoose"); // server base mongo npm install mongoose --save
 const app = express();
 const BodyParser = require("body-parser"); // paseador de body npm install body-parser
+const path = require('path'); // sirve para dejar visible la carpeta public
 
 
 // parse application/x-www-form-urlencoded
@@ -10,6 +11,11 @@ app.use(BodyParser.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(BodyParser.json());
+
+// habilitar la carpeta public
+app.use(express.static(path.resolve(__dirname, '../public')));
+
+console.log(path.resolve(__dirname, '../public'));
 
 //CONFIGURACION GLOBAL DE RUTAS
 app.use(require('./routes/index'));
