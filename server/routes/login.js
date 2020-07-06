@@ -75,26 +75,26 @@ async function verify(token) {
     return {
         nombre: payload.name,
         email: payload.email,
-        img: payload.picture,
+        img:  payload.picture,
         google: true
     }
 }
 //verify().catch(console.error);
 
 
-app.post('/google', async(req, res) => {
+app.post('/google', async (req, res) => {
 
     let body = req.body;
 
     let googleUser = await verify(body.idtoken)
-        .catch(e => {
+        .catch(e =>{
             return res.status(403).json({
                 ok: false,
                 err: e
             });
         });
-
-    Usuario.findOne({ email: googleUser.email }, (err, usuarioDB) => {
+    
+    Usuario.findOne({email: googleUser.email}, (err, usuarioDB)=>{
         if (err) {
             return res.status(500).json({
                 ok: false,
@@ -102,15 +102,15 @@ app.post('/google', async(req, res) => {
             });
         }
 
-        if (usuarioDB) {
-            if (usuarioDB.google === false) {
+        if(usuarioDB){
+            if(usuarioDB.google === false){
                 return res.status(400).json({
                     ok: false,
                     err: {
                         message: 'Debe de usar su autenticación normal'
                     }
                 });
-            } else {
+            }else{
                 let token = jwt.sign({
                     usuario: usuarioDB
                 }, process.env.SEED, { expiresIn: process.env.CADUCIDAD_TOKEN });
@@ -118,10 +118,10 @@ app.post('/google', async(req, res) => {
                 return res.json({
                     ok: true,
                     usuario: usuarioDB,
-                    token,
+                    token, 
                 });
             }
-        } else {
+        }else{
             // si el usuario no existe en nuestra base deatos.
             let usuario = new Usuario();
 
@@ -131,7 +131,7 @@ app.post('/google', async(req, res) => {
             usuario.google = true;
             usuario.password = ':)'; // pasa a hash de 10 vueltas y nunca hara mach para el ingreso!.
 
-            usuario.save((err, usuarioDB) => {
+            usuario.save((err, usuarioDB) =>{
                 if (err) {
                     return res.status(500).json({
                         ok: false,
@@ -146,9 +146,9 @@ app.post('/google', async(req, res) => {
                 return res.json({
                     ok: true,
                     usuario: usuarioDB,
-                    token,
+                    token, 
                 });
-
+                
 
             });
         }
