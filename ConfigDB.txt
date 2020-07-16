@@ -24,3 +24,6 @@ C:\Users\server_node\Desktop\node\07-restserver
 nodemon server/server
 
 
+npm install --save express-fileupload
+
+
